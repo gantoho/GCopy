@@ -11,6 +11,10 @@ import { EventsOn, BrowserOpenURL, ClipboardGetText, ClipboardSetText, EventsEmi
 
 console.log(Mousetrap)
 
+Mousetrap.bind('ctrl+c', function() {
+  console.log('command c');
+});
+
 EventsOn('Copy', async (text) => {
   console.log('Copy: ', text)
 })

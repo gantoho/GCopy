@@ -3,6 +3,9 @@ package main
 import (
 	"embed"
 	"fmt"
+	"github.com/wailsapp/wails/v2/pkg/menu"
+	"github.com/wailsapp/wails/v2/pkg/menu/keys"
+	"github.com/wailsapp/wails/v2/pkg/runtime"
 
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
@@ -18,13 +21,20 @@ func main() {
 	// Create an instance of the app structure
 	app := NewApp()
 
-	//AppMenu := menu.NewMenu()
-	//FileMenu := AppMenu.AddSubmenu("File")
-	//FileMenu.AddSeparator()
-	//FileMenu.AddText("Copy", keys.CmdOrCtrl("c"), func(_ *menu.CallbackData) {
-	//	str, _ := runtime.ClipboardGetText(app.ctx)
-	//	runtime.EventsEmit(app.ctx, "Copy", str)
-	//})
+	AppMenu := menu.NewMenu()
+	FileMenu := AppMenu.AddSubmenu("File")
+	FileMenu.AddText("打开窗口", keys.CmdOrCtrl("o"), func(_ *menu.CallbackData) {
+		runtime.Show(app.ctx)
+	})
+	FileMenu.AddSeparator()
+	FileMenu.AddText("复制内容", keys.CmdOrCtrl("c"), func(_ *menu.CallbackData) {
+		str, _ := runtime.ClipboardGetText(app.ctx)
+		runtime.EventsEmit(app.ctx, "Copy", str)
+	})
+	FileMenu.AddSeparator()
+	FileMenu.AddText("退出应用", keys.CmdOrCtrl("q"), func(_ *menu.CallbackData) {
+		runtime.Quit(app.ctx)
+	})
 
 	// Create application with options
 	err := wails.Run(&options.App{
@@ -39,7 +49,7 @@ func main() {
 		AssetServer: &assetserver.Options{
 			Assets: assets,
 		},
-		//Menu: AppMenu,
+		Menu: AppMenu,
 		Windows: &windows.Options{
 			WebviewIsTransparent: true,
 			WindowIsTranslucent:  true,

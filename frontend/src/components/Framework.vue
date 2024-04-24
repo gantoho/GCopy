@@ -10,6 +10,10 @@ onMounted(async () => {
   nowTime.value = await NowTime()
 })
 
+const writeText = async () => {
+  await navigator.clipboard.writeText('Yo')
+}
+
 </script>
 
 <template>
@@ -17,6 +21,7 @@ onMounted(async () => {
     <h1>Framework</h1>
     <span>{{ msg }}</span>
     <p>{{ nowTime }}</p>
+    <button @click="writeText">click</button>
   </div>
 </template>
 
