@@ -1,5 +1,6 @@
 <script setup lang='ts'>
 import { ref } from 'vue'
+import Mousetrap from 'mousetrap';
 import Framework from '@/components/Framework.vue';
 import Item from '@/components/Item.vue'
 import { EventsOn, BrowserOpenURL, ClipboardGetText, ClipboardSetText, EventsEmit } from '../../wailsjs/runtime/runtime'
@@ -7,6 +8,8 @@ import { EventsOn, BrowserOpenURL, ClipboardGetText, ClipboardSetText, EventsEmi
 // ClipboardSetText('Hello World').then(async () => {
 //   await ClipboardGetText()
 // })
+
+console.log(Mousetrap)
 
 EventsOn('Copy', async (text) => {
   console.log('Copy: ', text)
