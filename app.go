@@ -112,3 +112,14 @@ func (a *App) AddNote(note Note) string {
 	}
 	return "ok"
 }
+
+// 删除notes文件夹中的某个文件
+func (a *App) DeleteNote(filename string) string {
+	dst := "./notes/"
+	err := os.Remove(dst + filename)
+	if err != nil {
+		fmt.Println("error deleting file:", err)
+		return err.Error()
+	}
+	return "ok"
+}

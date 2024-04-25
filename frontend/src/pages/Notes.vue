@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import { GetContent, AddNote } from '@/../wailsjs/go/main/App'
+import { GetContent, AddNote, DeleteNote } from '@/../wailsjs/go/main/App'
+import { WindowSetAlwaysOnTop, WindowSetPosition } from '@/../wailsjs/runtime'
 import { NButton, NIcon, NModal, NInput, NScrollbar, NEmpty, useMessage } from 'naive-ui'
-import { Add, HappyOutline } from '@vicons/ionicons5'
+import { Add, HappyOutline, Rocket, TrashBin } from '@vicons/ionicons5'
 import Note from '@/components/Note.vue'
 import { QuillEditor } from '@vueup/vue-quill'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
-import { error } from "console";
 
 const message = useMessage()
 
@@ -17,6 +17,7 @@ const getContent = async () => {
 
 onMounted(() => {
   getContent()
+  WindowSetPosition(0, 0)
 })
 
 const showModal = ref(false)
@@ -44,14 +45,33 @@ const editorOption= {
   }
 }
 const scrollbarMaxHeight = ref("150px")
+
+const windowTop = ref(false)
+const handleWindowTop = () => {
+  windowTop.value = !windowTop.value
+  console.log(windowTop.value)
+  WindowSetAlwaysOnTop(windowTop.value)
+}
+
+const deleteNoteFn = (fileName: string) => {
+  DeleteNote(fileName)
+  getContent()
+}
 </script>
 
 <template>
   <div class="notes" v-if="notes">
     <Note v-for="note in notes" :key="note.id" :note="note">
       <template #default="{data}">
-        <span class="filename">{{ data.filename }}</span>
-        <n-scrollbar :style="{'max-height': scrollbarMaxHeight}">
+        <div class="title">
+          <span class="filename">{{ data.filename }}</span>
+          <n-button type="error" size="small" @click="deleteNoteFn(data.filename)">
+            <n-icon>
+              <TrashBin />
+            </n-icon>
+          </n-button>
+        </div>
+        <n-scrollbar class="scrollbar" :style="{'max-height': scrollbarMaxHeight}">
           <pre class="content">{{ data.content }}</pre>
         </n-scrollbar>
       </template>
@@ -70,11 +90,18 @@ const scrollbarMaxHeight = ref("150px")
     </template>
   </n-empty>
   <!--  添加按钮-->
-  <n-button class="add-btn" type="primary" secondary circle @click="showModal = true">
-    <n-icon>
-      <Add/>
-    </n-icon>
-  </n-button>
+  <div class="btns">
+    <n-button class="top-btn" type="primary" :ghost="!windowTop" secondary circle @click="handleWindowTop">
+      <n-icon>
+        <Rocket/>
+      </n-icon>
+    </n-button>
+    <n-button class="add-btn" type="primary" secondary circle @click="showModal = true">
+      <n-icon>
+        <Add/>
+      </n-icon>
+    </n-button>
+  </div>
   <n-modal
     v-model:show="showModal"
     preset="dialog"
@@ -88,33 +115,47 @@ const scrollbarMaxHeight = ref("150px")
     <QuillEditor :options="editorOption" v-model:content="textareaValue" contentType="text" />
     <template #action>
       <n-button type="primary" secondary @click="addNoteFn"> 添加 </n-button>
-      <n-button type="primary" secondary ghost> 取消 </n-button>
+      <n-button type="primary" secondary ghost @click="showModal = false"> 取消 </n-button>
     </template>
   </n-modal>
 </template>
 
 <style scoped lang="scss">
 .notes {
-  margin: 0 10px;
-  .filename {
-    display: inline-block;
-    width: 100%;
-    color: #0051ff;
-    background-color: #4e3b3b;
-    position: sticky;
-    left: 0;
-    top: 0;
-    z-index: 1;
+  .title {
+    display: flex;
+    .filename {
+      display: inline-block;
+      width: 100%;
+      color: #fb7299;
+      background-color: #582b38;
+      position: sticky;
+      left: 0;
+      top: 0;
+      z-index: 1;
+      padding: 2px 4px;
+      border-radius: 10px;
+    }
+    &+.content {
+      margin-top: 10px;
+    }
   }
-  .content {
-    background-color: #3b3b3b;
-    color: #fff;
+  .scrollbar {
+    .content {
+      background-color: #3b3b3b;
+      color: #fff;
+      border-radius: 10px;
+      padding: 5px;
+    }
   }
 }
-.add-btn {
+.btns {
   position: fixed;
   bottom: 20px;
   right: 20px;
   z-index: 99;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 </style>
