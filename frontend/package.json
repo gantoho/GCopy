@@ -9,8 +9,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vueup/vue-quill": "^1.2.0",
+    "@vueuse/core": "^10.9.0",
     "mousetrap": "^1.6.5",
-    "vue": "^3.2.37"
+    "pinia": "^2.1.7",
+    "vue": "^3.2.37",
+    "vue-router": "^4.3.2",
+    "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
     "@babel/types": "^7.18.10",
