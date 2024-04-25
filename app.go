@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/wailsapp/wails/v2/pkg/runtime"
@@ -41,4 +42,53 @@ func (a *App) ShowWin() {
 	runtime.EventsOn(a.ctx, "showWindow", func(args ...interface{}) {
 		runtime.Show(a.ctx)
 	})
+}
+
+type Note struct {
+	ID       int64  `json:"id"`
+	FileName string `json:"filename"`
+	Content  string `json:"content"`
+}
+
+func (a *App) GetContent() ([]Note, error) {
+	dst := "./notes/"
+	files, err := os.Open(dst)
+	if err != nil {
+		fmt.Printf("error opening directory: %v", err) //print error if directory is not opened
+		err := os.Mkdir("./notes", os.ModePerm)
+		if err != nil {
+			fmt.Printf("notes directory not created: %v", err)
+			fmt.Print("请先在程序根目录下创建notes文件夹")
+			return nil, err
+		}
+		return nil, err
+	}
+	defer func() {
+		err := files.Close()
+		if err != nil {
+			return
+		}
+	}()
+	fileInfos, err := files.Readdir(-1)
+	if err != nil {
+		fmt.Println("error reading directory:", err) //if directory is not read properly print error message
+		return nil, err
+	}
+	//fmt.Println("files in notes:", fileInfos)
+
+	var returnNotes []Note
+	for index, fileInfos := range fileInfos {
+		fileContent, err := os.ReadFile(dst + fileInfos.Name())
+		if err != nil {
+			fmt.Println("error reading file:", err)
+			return nil, err
+		}
+		//fmt.Println(string(fileContent))
+		returnNotes = append(returnNotes, Note{
+			ID:       int64(index),
+			FileName: fileInfos.Name(),
+			Content:  string(fileContent),
+		})
+	}
+	return returnNotes, nil
 }
