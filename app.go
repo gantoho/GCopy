@@ -92,3 +92,23 @@ func (a *App) GetContent() ([]Note, error) {
 	}
 	return returnNotes, nil
 }
+
+// 向notes文件夹中添加文件
+func (a *App) AddNote(note Note) string {
+	dst := "./notes/"
+	// 创建文件
+	file, err := os.Create(dst + note.FileName)
+	if err != nil {
+		fmt.Println("error creating file:", err)
+		return err.Error()
+	}
+	defer file.Close()
+
+	// 写入内容
+	_, err = file.WriteString(note.Content)
+	if err != nil {
+		fmt.Println("errorwriting to file:", err)
+		return err.Error()
+	}
+	return "ok"
+}

@@ -26,6 +26,8 @@ const theme: GlobalThemeOverrides = {
         borderRadius: "15px"
     },
     Button: {
+        colorPrimary: "#fb7299",
+        colorDisabledPrimary: "#fb7299",
         colorHoverPrimary: "#fb7299",
         colorPressedPrimary: "#fb7299",
         colorFocusPrimary: "#fb7299",
@@ -33,9 +35,21 @@ const theme: GlobalThemeOverrides = {
         borderRadiusSmall: "10px",
         borderRadiusMedium: "10px",
         borderRadiusLarge: "10px",
+        textColorGhostPrimary: "#fb7299",
+        textColorGhostHoverPrimary: "#fb7299",
+        textColorGhostPressedPrimary: "#fb7299",
+        textColorGhostFocusPrimary: "#fb7299",
+        textColorGhostDisabledPrimary: "#fb7299",
     },
     Modal: {
-        color: "rgba(251,114,153,0.3)",
-    }
+        Dialog: {
+            color: "#298"
+        }
+    },
+	Input: {
+		borderHover: '1px solid #fb7299',
+		borderPressed: '1px solid #fb7299',
+		borderFocus: '1px solid #fb7299'
+	},
 }
 export default theme
