@@ -7,11 +7,15 @@ import (
 	"github.com/wailsapp/wails/v2"
 	"github.com/wailsapp/wails/v2/pkg/options"
 	"github.com/wailsapp/wails/v2/pkg/options/assetserver"
+	"github.com/wailsapp/wails/v2/pkg/options/mac"
 	"github.com/wailsapp/wails/v2/pkg/options/windows"
 )
 
 //go:embed all:frontend/dist
 var assets embed.FS
+
+//go:embed build/appicon.png
+var icon []byte
 
 func main() {
 
@@ -57,6 +61,13 @@ func main() {
 			},
 			OnResume: func() {
 				fmt.Println("进入工作")
+			},
+		},
+		Mac: &mac.Options{
+			About: &mac.AboutInfo{
+				Title:   "Gofiler",
+				Message: "@ 2024 ganto.me",
+				Icon:    icon,
 			},
 		},
 		Debug: options.Debug{
