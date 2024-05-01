@@ -17,7 +17,9 @@ const getContent = async () => {
 
 onMounted(() => {
   getContent()
-  WindowSetPosition(0, 0)
+  console.log(window.innerWidth, window.innerHeight, window.screen.width, window.screen.height)
+  console.log(window.screen.width - window.innerWidth, window.screen.height - window.innerHeight)
+  WindowSetPosition(window.screen.width - window.innerWidth, window.screen.height - window.innerHeight)
 })
 
 const showModal = ref(false)
