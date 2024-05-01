@@ -2,7 +2,7 @@
 import { ref, onMounted, watchEffect } from "vue";
 import { GetContent, AddNote, DeleteNote } from '@/../wailsjs/go/main/App'
 import { WindowSetAlwaysOnTop, WindowSetPosition, WindowSetSystemDefaultTheme, WindowSetLightTheme , WindowSetDarkTheme } from '@/../wailsjs/runtime'
-import { NButton, NIcon, NModal, NInput, NScrollbar, NEmpty, NPopconfirm, useMessage } from 'naive-ui'
+import { NButton, NIcon, NModal, NInput, NScrollbar, NEmpty, NPopconfirm, useMessage, darkTheme } from 'naive-ui'
 import { Add, HappyOutline, Rocket, TrashBin, InvertMode, RadioButtonOff, RadioButtonOn } from '@vicons/ionicons5'
 import Note from '@/components/Note.vue'
 import { QuillEditor } from '@vueup/vue-quill'
@@ -59,6 +59,28 @@ const deleteNoteFn = (fileName: string) => {
 }
 
 const theme = ref("auto")
+const themeG = defineModel("theme")
+if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  themeG.value = darkTheme
+} else {
+  themeG.value = null
+}
+const handleTheme = () => {
+  if (theme.value === "auto") {
+    theme.value = "light"
+    themeG.value = null
+  } else if (theme.value === "light") {
+    theme.value = "dark"
+    themeG.value = darkTheme
+  } else {
+    theme.value = "auto"
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      themeG.value = darkTheme
+      return
+    }
+    themeG.value = null
+  }
+}
 watchEffect(() => {
   if (theme.value === "auto") {
     WindowSetSystemDefaultTheme()
@@ -68,15 +90,7 @@ watchEffect(() => {
     WindowSetDarkTheme()
   }
 })
-const handleTheme = () => {
-  if (theme.value === "auto") {
-    theme.value = "light"
-  } else if (theme.value === "light") {
-    theme.value = "dark"
-  } else {
-    theme.value = "auto"
-  }
-}
+
 </script>
 
 <template>
@@ -86,9 +100,9 @@ const handleTheme = () => {
         <div class="title">
           <span class="filename">{{ data.filename }}</span>
           <n-popconfirm
-            @positive-click="deleteNoteFn(data.filename)"
-            :show-icon="false"
-            style="background-color: #220; color: #9c9c9c;"
+              @positive-click="deleteNoteFn(data.filename)"
+              :show-icon="false"
+
           >
             <template #trigger>
               <n-button type="error" size="small">
@@ -138,10 +152,10 @@ const handleTheme = () => {
     </n-button>
   </div>
   <n-modal
-    v-model:show="showModal"
-    preset="dialog"
-    :show-icon="false"
-    style="background-color: #3b3b3b; color: #9c9c9c; padding: 10px;"
+      v-model:show="showModal"
+      preset="dialog"
+      :show-icon="false"
+      style="background-color: #3b3b3b; color: #9c9c9c; padding: 10px;"
   >
     <template #header>
       <div style="color: #fff;">添加笔记</div>

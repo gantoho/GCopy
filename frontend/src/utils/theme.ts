@@ -40,16 +40,21 @@ const theme: GlobalThemeOverrides = {
         textColorGhostPressedPrimary: "#fb7299",
         textColorGhostFocusPrimary: "#fb7299",
         textColorGhostDisabledPrimary: "#fb7299",
+        textColor: '#fb7299',
+        border: '1px solid #fb7299',
+        borderHover: '1px solid #fb7299',
+        textColorHover: '#fb7299',
+        borderHoverPrimary: '1px solid #fb7299',
     },
     Modal: {
         Dialog: {
             color: "#298"
         }
     },
-	Input: {
-		borderHover: '1px solid #fb7299',
-		borderPressed: '1px solid #fb7299',
-		borderFocus: '1px solid #fb7299'
-	},
+    Input: {
+        borderHover: '1px solid #fb7299',
+        borderPressed: '1px solid #fb7299',
+        borderFocus: '1px solid #fb7299'
+    },
 }
 export default theme
