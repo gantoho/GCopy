@@ -123,3 +123,11 @@ func (a *App) DeleteNote(filename string) string {
 	}
 	return "ok"
 }
+
+func (a *App) OpenFile() {
+	dialog, err := runtime.OpenDirectoryDialog(a.ctx, runtime.OpenDialogOptions{})
+	if err != nil {
+		return
+	}
+	fmt.Println(dialog)
+}
