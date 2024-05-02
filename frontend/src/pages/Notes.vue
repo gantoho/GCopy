@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, watchEffect } from "vue";
 import { GetContent, AddNote, DeleteNote } from '@/../wailsjs/go/main/App'
-import { WindowSetAlwaysOnTop, WindowSetPosition, WindowSetSystemDefaultTheme, WindowSetLightTheme , WindowSetDarkTheme } from '@/../wailsjs/runtime'
+import { WindowSetAlwaysOnTop, WindowSetPosition, WindowSetSystemDefaultTheme, WindowSetLightTheme , WindowSetDarkTheme, WindowGetSize } from '@/../wailsjs/runtime'
 import { NButton, NIcon, NModal, NInput, NScrollbar, NEmpty, NPopconfirm, useMessage, darkTheme } from 'naive-ui'
 import { Add, HappyOutline, Rocket, TrashBin, InvertMode, RadioButtonOff, RadioButtonOn } from '@vicons/ionicons5'
 import Note from '@/components/Note.vue'
@@ -15,11 +15,12 @@ const getContent = async () => {
   notes.value = await GetContent()
 }
 
-onMounted(() => {
-  getContent()
-  console.log(window.innerWidth, window.innerHeight, window.screen.width, window.screen.height)
-  console.log(window.screen.width - window.innerWidth, window.screen.height - window.innerHeight)
-  WindowSetPosition(window.screen.width - window.innerWidth, window.screen.height - window.innerHeight)
+const windowGetSize = ref({})
+
+onMounted(async () => {
+  await getContent()
+  windowGetSize.value = await WindowGetSize()
+  WindowSetPosition(window.screen.width - windowGetSize.value.w, window.screen.height - windowGetSize.value.h - 50)
 })
 
 const showModal = ref(false)
@@ -36,7 +37,7 @@ const addNoteFn = async () => {
   }
   message.info("add note ok")
   showModal.value = false
-  getContent()
+  await getContent()
 }
 
 const fileName = ref()
